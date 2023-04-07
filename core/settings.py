@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'rating',
     'comments',
     'lists',
+    'admin_panel',
     'show_profile',
     'django_rest_passwordreset',
 ]

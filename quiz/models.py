@@ -19,10 +19,10 @@ class Question(models.Model):
 
 class Quiz(models.Model):
     question = models.ManyToManyField(Question, blank=True)
+    is_verified = models.BooleanField(default=False)
 
     def __str__(self):
         return "Quiz" + str(self.id)
-
 
 class QuizResult(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
