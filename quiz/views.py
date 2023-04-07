@@ -80,7 +80,6 @@ class ProposeQuestion(APIView):
 
 
 class BestScores(APIView):
-    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         results = QuizResult.objects.all().values('user_id').annotate(average_score=Avg('score')).order_by(
