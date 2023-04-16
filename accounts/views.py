@@ -87,7 +87,8 @@ class ObtainAuthToken(APIView):
         content = {
             'token': unicode(token.key),
             'nickname': user.nickname,
-            'is_admin': user.is_superuser and user.is_staff,
+            'is_admin': user.is_staff,
+            'is_super_admin': user.is_superuser and user.is_staff,
         }
 
         return Response(content)
