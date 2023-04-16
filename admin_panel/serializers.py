@@ -51,3 +51,12 @@ class QuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
         fields = '__all__'
+
+
+class UserSerializer(serializers.ModelSerializer):
+    is_admin = serializers.BooleanField(default=False, source='is_staff')
+    is_super_admin = serializers.BooleanField(default=False, source='is_superuser')
+
+    class Meta:
+        model = User
+        fields = ('id', 'nickname', 'username', 'email', 'is_admin', 'is_super_admin')
