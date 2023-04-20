@@ -28,6 +28,7 @@ class Commentapi(APIView):
             return Response(ser_comment.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
+        
         book = Book.objects.get(id=request.query_params['id'])
         book_comments = Allcommentsserializer(book)
         return Response(book_comments.data, status=status.HTTP_200_OK)
@@ -51,7 +52,7 @@ class Replytocomment(APIView):
         comment_id = request.query_params['comment_id']
         comment = Comment.objects.get(id=comment_id)
         result = []
-        for reply in comment.replycomment_set.all():
+        for reply in comment.replycomment_set.filter(is_verified=True).all():
             ser_comment = Replyserializer(reply)
             result.append(ser_comment.data)
 
@@ -71,7 +72,7 @@ class UserComments(ListAPIView):
 
     def get_queryset(self):
         username = self.request.query_params.get('username')
-        return Comment.objects.filter(user__username=username).order_by('-created_on')[:50]
+        return Comment.objects.filter(user__username=username).filter(is_verified=True).order_by('-created_on')[:50]
 
 
 class LikeComment(APIView):

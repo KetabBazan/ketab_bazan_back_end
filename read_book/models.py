@@ -41,7 +41,7 @@ class Book(models.Model):
         return sum(all_rates)/len(all_rates)
 
     def allcomments(self):
-        all_comments = self.comment_set.all()
+        all_comments = self.comment_set.filter(is_verified=True).all()
         result = []
         i=0
         for comment in all_comments:
@@ -54,12 +54,15 @@ class Book(models.Model):
                            "like": comment.like.count(),
                            "dislike": comment.dislike.count()
                            })
-            for reply in comment.replycomment_set.all():
+            all_reply = comment.replycomment_set.filter(is_verified=True).all()
+            for reply in all_reply:
                 result[i]['reply'].append({"reply_text": reply.reply_text,
                                            "user": reply.user.username,
                                            "created_on": reply.created_on,
                                            "reply_user_id": reply.user.id
                                            })
             i += 1
+            
+                
         return result
 
