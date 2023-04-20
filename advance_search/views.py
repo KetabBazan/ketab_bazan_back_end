@@ -4,7 +4,6 @@ from read_book.serializers import BookInfoSerializer
 from read_book.models import Book
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-# Create your views here.
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -16,9 +15,17 @@ class Advancesearch(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookInfoSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = {'name': ['contains'], 'author__name': ['contains'], 'genre__name': ['contains'],
-                        'price': ['gte', 'lte'], 'publisher': ['contains']}
-    ordering_fields = ['price', 'created']
+    filterset_fields = {
+        'name': ['contains'],
+        'author__name': ['contains'],
+        'genre__name': ['contains'],
+        'price': ['gte', 'lte'],
+        'publisher': ['contains']
+    }
+    ordering_fields = [
+        'price',
+        'created'
+    ]
     pagination_class = StandardResultsSetPagination
 
     def list(self, request, *args, **kwargs):
