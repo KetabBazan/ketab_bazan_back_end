@@ -34,6 +34,7 @@ urlpatterns = [
     path('showprofile/', include('show_profile.urls')),
     path('quiz/', include('quiz.urls')),
     path('resetpassword/', include(('forgotpassword.urls', 'forgotpassword') , namespace='forgotpassword')),
+    path('gift/', include('gift.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

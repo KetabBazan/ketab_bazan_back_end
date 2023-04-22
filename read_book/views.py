@@ -129,3 +129,22 @@ class AllGenres(ListAPIView):
 
     def get_queryset(self):
         return Genre.objects.all()
+
+
+class MyPurchasedBooks(ListAPIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = BookInfoSerializer
+
+    def get_queryset(self):
+        return self.request.user.purchased_books.all()
+
+
+class UserHasBook(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request):
+        book_id = self.request.query_params.get('book_id')
+        result = False
+        if self.request.user.purchased_books.all().filter(id=book_id).exists():
+            result = True
+        return Response(data={"hasbook": result}, status=status.HTTP_200_OK)
