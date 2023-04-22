@@ -10,7 +10,7 @@ from show_profile.models import UserActivity
 
 
 class ArticleList(generics.ListCreateAPIView):
-    queryset = Article.objects.all()
+    queryset = Article.objects.filter(is_verified = True)
     serializer_class = ArticleSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
@@ -24,13 +24,13 @@ class ArticleList(generics.ListCreateAPIView):
             )            
 
 class ArticleDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Article.objects.all()
+    queryset = Article.objects.filter(is_verified = True)
     serializer_class = ArticleSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly]
 
 class NewestArticles(generics.ListCreateAPIView):
-    queryset = Article.objects.order_by('-created')[0:7]
+    queryset = Article.objects.filter(is_verified = True).order_by('-created')[0:7]
     serializer_class = ArticleSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]                          
 

@@ -26,6 +26,7 @@ class Replycomment(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
+    is_verified = models.BooleanField(default=False)
 
     def __str__(self):
         return "user:" + self.user.username + "reply:" + self.reply_text[:7]
