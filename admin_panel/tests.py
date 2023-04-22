@@ -1,14 +1,10 @@
-import random
-
 from rest_framework.test import APITestCase
-from comments.tests import get_test_user, create_test_book
+from comments.tests import get_test_user
 from accounts.models import User
 from quiz.tests import create_test_user
 
-from read_book.models import Book
 
-
-class RatingTest(APITestCase):
+class RootAdminTest(APITestCase):
     def test_create_and_update_rate(self):
         (user_token, user_id) = get_test_user()
         for i in range(25):
