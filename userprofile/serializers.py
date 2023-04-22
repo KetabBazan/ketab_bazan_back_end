@@ -4,11 +4,13 @@ from accounts.models import User
 
 class Profileserializer(serializers.ModelSerializer):
     born_date = serializers.CharField(max_length=12)
+    image = serializers.SerializerMethodField()
     class Meta:
         model = Profile
-        fields = ('fullname', 'bio', 'gender', 'born_date')
+        fields = ('fullname', 'bio', 'gender', 'born_date', 'image')
 
-
+    def get_image(self, obj):
+        return "https://api.ketabbazan.ml" + obj.image.url
 
 class Profileserializerwithimage(serializers.ModelSerializer):
     class Meta:

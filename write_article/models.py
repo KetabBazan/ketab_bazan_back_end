@@ -15,6 +15,7 @@ class Article(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     image = models.ImageField(_("Image"), upload_to=upload_to, default='articles/default.jpg')
     book = models.ForeignKey(Book, blank=True, null=True, on_delete = models.SET_NULL)
+    is_verified = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['created']

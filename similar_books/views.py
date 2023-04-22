@@ -74,7 +74,10 @@ class SimilarBooks(APIView):
             if checkSimilarity(thebookauthors, book):
                 res.append(book.id)
 
-        for book_id in res:
+        end_ind = len(res)
+        start_ind = max(len(res) - 10, 0)
+
+        for book_id in res[start_ind : end_ind]:
             booki = get_object_or_404(Book, id=book_id)
             book_serializer = BookInfoSerializer(instance=booki)
             data = book_serializer.data

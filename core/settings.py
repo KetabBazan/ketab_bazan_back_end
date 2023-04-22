@@ -9,13 +9,12 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
 from pathlib import Path
+from .bootstrap import dotenv
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -27,6 +26,8 @@ SECRET_KEY = 'django-insecure-))--6#ij1zx#f%x-yz)^3rzp#76n@zdo@uz5$k53qxk0h0(mdv
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -48,16 +49,22 @@ INSTALLED_APPS = [
     'search',
     'write_article',
     'similar_books',
+    'quiz',
     'rest_framework',
     'rest_framework.authtoken',
     'rating',
     'comments',
     'advance_search',
+    'lists',
+    'admin_panel',
+    'show_profile',
+    'django_rest_passwordreset',
+    'gift'
 ]
 
 # default settings
 JALALI_DATE_DEFAULTS = {
-   'Strftime': {
+    'Strftime': {
         'date': '%y/%m/%d',
         'datetime': '%H:%M:%S _ %y/%m/%d',
     },
@@ -79,6 +86,10 @@ JALALI_DATE_DEFAULTS = {
         }
     },
 }
+
+CSRF_COOKIE_SECURE = False
+
+CSRF_TRUSTED_ORIGINS = ['http://94.101.185.252']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -111,21 +122,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql_psycopg2',
-       'NAME': 'projdb',
-       'HOST': 'localhost',
-       'USER': 'postgres',
-       'PASSWORD': 'admin2000',
-       'PORT': '5432',
-   }
- }
-
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': os.getenv('DATABASE_HOST', default='localhost'),
+        'NAME': os.getenv('DATABASE_NAME', default='projdb'),
+        'USER': os.getenv('DATABASE_USERNAME', default='username'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', default='password'),
+        'PORT': os.getenv('DATABASE_PORT', default='5432'),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -145,7 +154,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -156,7 +164,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -171,6 +178,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
 }
 
@@ -180,6 +188,11 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-#Heroku Settings
-#import django_heroku
-#django_heroku.settings(locals())
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_USE_TLS = bool(os.getenv('EMAIL_USE_TLS', default=True))
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', default=587))
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+

@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-
+from userprofile.models import Profile
 from .models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -75,3 +75,18 @@ class AuthCustomTokenSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+
+
+class ProfileImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('image',)
+
+
+class SearchUserSerializer(serializers.ModelSerializer):
+    profile = ProfileImageSerializer()
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'profile', )
+

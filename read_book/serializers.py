@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.utils import timezone
+from .models import Genre
 
 class BookInfoSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=50)
@@ -10,3 +11,8 @@ class BookInfoSerializer(serializers.Serializer):
     created = serializers.DateTimeField(default=timezone.now) 
     pdf_url = serializers.URLField()  
     genre_name = serializers.CharField(source='genre.name', allow_null=True)
+
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ('name',)
