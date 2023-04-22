@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
     'corsheaders',
     'jalali_date',
     'accounts.apps.AccountsConfig',
@@ -53,10 +54,12 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rating',
     'comments',
+    'advance_search',
     'lists',
     'admin_panel',
     'show_profile',
     'django_rest_passwordreset',
+    'gift'
 ]
 
 # default settings
@@ -185,9 +188,11 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_USE_TLS = bool(os.getenv('EMAIL_USE_TLS', default=True))
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', default=587))
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+

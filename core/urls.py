@@ -30,10 +30,12 @@ urlpatterns = [
     path('similar_books/', include('similar_books.urls')),
     path('rate/', include('rating.urls')),
     path('comment/', include('comments.urls')),
+    path('advancesearch/', include('advance_search.urls')),
     path('lists/', include('lists.urls')),
     path('showprofile/', include('show_profile.urls')),
     path('quiz/', include('quiz.urls')),
     path('resetpassword/', include(('forgotpassword.urls', 'forgotpassword') , namespace='forgotpassword')),
+    path('gift/', include('gift.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
