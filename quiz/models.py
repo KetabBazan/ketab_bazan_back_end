@@ -12,7 +12,8 @@ class Question(models.Model):
     op4 = models.CharField(max_length=1000, null=True)
     ans = models.IntegerField()
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True)
-
+    is_verified = models.BooleanField(default=False)
+    
     def __str__(self):
         return self.question
 

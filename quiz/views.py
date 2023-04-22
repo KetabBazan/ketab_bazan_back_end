@@ -17,7 +17,7 @@ class SubmitQuiz(APIView):
 
     def get(self, request, quiz_id):
         res = {}
-        questions = Quiz.objects.get(id=quiz_id).question.order_by('id')
+        questions = Quiz.objects.get(id=quiz_id).question.order_by('id').filter(is_verified=True)
         for question, i in zip(questions, range(1, questions.count() + 1)):
             res["ans" + str(i)] = question.ans
 
@@ -33,11 +33,11 @@ class GenerateQuiz(APIView):
         try:
             param = request.query_params['q']
             if param == "question_count":
-                return Response(min(5, Question.objects.filter(book=book_id).count()))
+                return Response(min(5, Question.objects.filter(book=book_id).filter(is_verified=True).count()))
         except:
             pass
 
-        if (Question.objects.filter(book=book_id).count() == 0):
+        if (Question.objects.filter(book=book_id).filter(is_verified=True).count() == 0):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         if (request.user.past_read.filter(id=book_id).count() == 0 and
@@ -46,7 +46,7 @@ class GenerateQuiz(APIView):
                 request.user.left_read.filter(id=book_id).count() == 0):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        queryset = Question.objects.filter(book=book_id).order_by('?')[:5]
+        queryset = Question.objects.filter(book=book_id).filter(is_verified=True).order_by('?')[:5]
 
         ans = []
         new_quiz = Quiz.objects.create()
