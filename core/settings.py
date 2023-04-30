@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     'admin_panel',
     'show_profile',
     'django_rest_passwordreset',
-    'gift'
+    'gift',
+    'group'
 ]
 
 # default settings
