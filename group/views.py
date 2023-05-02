@@ -51,7 +51,7 @@ class GroupMembers(APIView):
             group = Group.objects.get(id=group_id)
         except:
             return Response(data={"message":"no group with this id"}, status=status.HTTP_400_BAD_REQUEST)
-        if group.users.filter(id=self.request.user.id).exists():
+        if group.owner == self.request.user:
             new_user_id = self.request.data.get('new_user_id')
             try:
                 new_user = User.objects.get(id=new_user_id)
@@ -61,7 +61,7 @@ class GroupMembers(APIView):
             group.save()
             return Response(status=status.HTTP_200_OK)
         else:
-            return Response(data={"message":"only user of a group can add"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={"message":"only admin can add"}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
         group_id = self.request.data.get('group_id')
@@ -69,7 +69,7 @@ class GroupMembers(APIView):
             group = Group.objects.get(id=group_id)
         except:
             return Response(data={"message": "no group with this id"}, status=status.HTTP_400_BAD_REQUEST)
-        if group.users.filter(id=self.request.user.id).exists():
+        if group.owner == self.request.user:
             delete_user_id = self.request.data.get('new_user_id')
             try:
                 new_user = User.objects.get(id=delete_user_id)
@@ -79,7 +79,7 @@ class GroupMembers(APIView):
             group.save()
             return Response(status=status.HTTP_200_OK)
         else:
-            return Response(data={"message": "only user of a group can remove"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={"message": "only admin can remove"}, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
         group_id = self.request.query_params.get('group_id')
