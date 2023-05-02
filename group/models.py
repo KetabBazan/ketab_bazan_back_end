@@ -10,3 +10,4 @@ class Group(models.Model):
     picture = models.ImageField(default="groupimages/default.jpg", upload_to='groupimages')
     users = models.ManyToManyField(User, blank=True)
     category = models.ForeignKey(to=Genre, on_delete=models.CASCADE)
+    owner = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='owner')
