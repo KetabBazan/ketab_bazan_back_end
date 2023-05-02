@@ -15,6 +15,10 @@ class CreateGroup(CreateAPIView):
     serializer_class = CreateGroupSerializer
     permission_classes = [IsAuthenticated, ]
 
+    def create(self, request, *args, **kwargs):
+        request.data['owner'] = self.request.user.id
+        return super().create(request, *args, **kwargs)
+
 
 class ShowAllGroups(ListAPIView):
     serializer_class = ShowGroupSerializer

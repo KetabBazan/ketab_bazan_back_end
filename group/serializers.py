@@ -6,7 +6,7 @@ from read_book.models import Genre
 class CreateGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ('name', 'bio', 'category', )
+        fields = ('name', 'bio', 'category', 'owner')
 
 
 class GenreSerializer(serializers.ModelSerializer):
