@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from accounts.models import User
 from accounts.serializers import SearchUserSerializer
+from userprofile.custom_renders import JPEGRenderer
 # Create your views here.
 
 
@@ -102,20 +103,22 @@ class UpdateGroupInfo(RetrieveUpdateAPIView):
 
 class GroupPhoto(APIView):
     #permission_classes = [IsAuthenticated, ]
-
+    renderer_classes = [JPEGRenderer, ]
     def post(self, request):
         group_id = self.request.data['group_id']
         try:
             group = Group.objects.get(id=group_id)
         except:
             return Response(data={"message": "no group with this id"}, status=status.HTTP_400_BAD_REQUEST)
+        if self.request.user != group.owner:
+            return Response(data={"message":"only admin can set a profile image"}, status=status.HTTP_403_FORBIDDEN)
         image = self.request.FILES.get('image')
         group.picture = image
         group.save()
         return Response(data={"message": "successfully add image"}, status=status.HTTP_200_OK)
 
     def get(self, request):
-        group_id = self.request.data['group_id']
+        group_id = self.request.query_params.get('group_id')
         try:
             group = Group.objects.get(id=group_id)
         except:
