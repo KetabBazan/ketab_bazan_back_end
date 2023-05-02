@@ -1,8 +1,13 @@
 from django.shortcuts import render
-from .serializers import CreateGroupSerializer, ShowGroupSerializer
-from rest_framework.generics import CreateAPIView, ListAPIView
+from .serializers import CreateGroupSerializer, ShowGroupSerializer, UpdateGroupSerializer
+from rest_framework.views import APIView
+from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from .models import Group
+from rest_framework.response import Response
+from rest_framework import status
+from accounts.models import User
+from accounts.serializers import SearchUserSerializer
 # Create your views here.
 
 
@@ -26,3 +31,85 @@ class ShowCategoryGroup(ListAPIView):
     def get_queryset(self):
         genre_id = self.request.query_params.get('genre_id')
         return Group.objects.filter(category=genre_id)
+
+
+class GroupMembers(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def post(self, request):
+        group_id = self.request.data.get('group_id')
+        try:
+            group = Group.objects.get(id=group_id)
+        except:
+            return Response(data={"message":"no group with this id"}, status=status.HTTP_400_BAD_REQUEST)
+        if group.users.filter(id=self.request.user.id).exists():
+            new_user_id = self.request.data.get('new_user_id')
+            try:
+                new_user = User.objects.get(id=new_user_id)
+            except:
+                return Response(data={"message":"no user with this id"}, status=status.HTTP_400_BAD_REQUEST)
+            group.users.add(new_user)
+            group.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(data={"message":"only user of a group can add"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        group_id = self.request.data.get('group_id')
+        try:
+            group = Group.objects.get(id=group_id)
+        except:
+            return Response(data={"message": "no group with this id"}, status=status.HTTP_400_BAD_REQUEST)
+        if group.users.filter(id=self.request.user.id).exists():
+            delete_user_id = self.request.data.get('new_user_id')
+            try:
+                new_user = User.objects.get(id=delete_user_id)
+            except:
+                return Response(data={"message": "no user with this id"}, status=status.HTTP_400_BAD_REQUEST)
+            group.users.remove(new_user)
+            group.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(data={"message": "only user of a group can remove"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        group_id = self.request.query_params.get('group_id')
+        try:
+            group = Group.objects.get(id=group_id)
+        except:
+            return Response(data={"message": "no group with this id"}, status=status.HTTP_400_BAD_REQUEST)
+        response = SearchUserSerializer(group.users.all(), many=True)
+        return Response(data=response.data, status=status.HTTP_200_OK)
+
+
+
+class UpdateGroupInfo(RetrieveUpdateAPIView):
+    serializer_class = UpdateGroupSerializer
+    permission_classes = [IsAuthenticated, ]
+
+    def get_queryset(self):
+        return Group.objects.all()
+
+
+class GroupPhoto(APIView):
+    #permission_classes = [IsAuthenticated, ]
+
+    def post(self, request):
+        group_id = self.request.data['group_id']
+        try:
+            group = Group.objects.get(id=group_id)
+        except:
+            return Response(data={"message": "no group with this id"}, status=status.HTTP_400_BAD_REQUEST)
+        image = self.request.FILES.get('image')
+        group.picture = image
+        group.save()
+        return Response(data={"message": "successfully add image"}, status=status.HTTP_200_OK)
+
+    def get(self, request):
+        group_id = self.request.data['group_id']
+        try:
+            group = Group.objects.get(id=group_id)
+        except:
+            return Response(data={"message": "no group with this id"}, status=status.HTTP_400_BAD_REQUEST)
+        image = group.picture
+        return Response(image, content_type='image/jpeg')
