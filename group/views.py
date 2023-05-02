@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .serializers import CreateGroupSerializer, ShowGroupSerializer, UpdateGroupSerializer
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, ListAPIView, UpdateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from .models import Group
 from rest_framework.response import Response
@@ -18,6 +18,11 @@ class CreateGroup(CreateAPIView):
     def create(self, request, *args, **kwargs):
         request.data['owner'] = self.request.user.id
         return super().create(request, *args, **kwargs)
+
+
+class ShowGroupInfo(RetrieveAPIView):
+    serializer_class = ShowGroupSerializer
+    queryset = Group.objects.all()
 
 
 class ShowAllGroups(ListAPIView):
