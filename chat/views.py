@@ -53,28 +53,31 @@ class ChatRoomView(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
-        username = text_data_json["username"]
 
         await self.channel_layer.group_send(
             self.group_name,
             {
                 "type": "chatbox_message",
                 "message": message,
-                "username": username,
+                "user": {
+                    "id": self.scope['user'].id,
+                    "nickname": self.scope['user'].nickname,
+                    "username": self.scope['user'].username
+                }
             },
         )
 
     async def chatbox_message(self, event):
         message = event["message"]
-        username = event["username"]
-        # send message and username of sender to websocket
         await self.send(
             text_data=json.dumps(
                 {
                     "message": message,
-                    "username": username,
+                    "user": {
+                        "id": event["user"]["id"],
+                        "nickname": event["user"]["nickname"],
+                        "username": event["user"]["username"],
+                    }
                 }
             )
         )
-
-    pass
