@@ -1,7 +1,6 @@
 from django.db import models
 from accounts.models import User
 from read_book.models import Genre
-# Create your models here.
 
 
 class Group(models.Model):
@@ -11,3 +10,10 @@ class Group(models.Model):
     users = models.ManyToManyField(User, blank=True)
     category = models.ForeignKey(to=Genre, on_delete=models.CASCADE)
     owner = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='owner')
+
+
+class ChatMessage(models.Model):
+    message = models.CharField(max_length=500, null=False, blank=False)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, unique=False)
+    group = models.ForeignKey(to=Group, on_delete=models.CASCADE, unique=False)
+    created_at = models.DateTimeField(auto_now_add=True)

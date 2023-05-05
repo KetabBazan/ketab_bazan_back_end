@@ -2,6 +2,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from rest_framework.authtoken.models import Token
 
+from group.models import ChatMessage
 from group.models import Group
 from asgiref.sync import sync_to_async
 
@@ -33,6 +34,7 @@ class ChatRoomView(AsyncWebsocketConsumer):
             raise Exception("you dont have the permission to this group")
 
     async def connect(self):
+        token = None
         try:
             token = dict(self.scope['headers'])[b'authorization'].decode()
             self.group_id = int(self.scope["url_route"]["kwargs"]["group_id"])
@@ -66,6 +68,7 @@ class ChatRoomView(AsyncWebsocketConsumer):
                 }
             },
         )
+        await self.create_message(message, self.scope['user'].id)
 
     async def chatbox_message(self, event):
         message = event["message"]
@@ -81,3 +84,12 @@ class ChatRoomView(AsyncWebsocketConsumer):
                 }
             )
         )
+
+    @sync_to_async
+    def create_message(self, message, user_id):
+        chat_message = ChatMessage(
+            message=message,
+            user_id=user_id,
+            group_id=self.group_id,
+        )
+        chat_message.save()
