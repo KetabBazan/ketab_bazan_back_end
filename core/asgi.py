@@ -34,13 +34,12 @@ from channels.routing import ProtocolTypeRouter, URLRouter  # noqa isort:skip
 
 websocket_urlpatterns = [
     re_path(
-        r"ws/chat/(?P<chat_box_name>\w+)/$", ChatRoomView.as_asgi()
+        r"ws/chat/(?P<group_id>\w+)$", ChatRoomView.as_asgi()
     ),
 ]
 
 application = ProtocolTypeRouter(
     {
-        "http": get_asgi_application,
         "websocket": URLRouter(websocket_urlpatterns),
     }
 )

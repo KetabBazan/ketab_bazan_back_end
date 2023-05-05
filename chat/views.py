@@ -1,11 +1,47 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
+from rest_framework.authtoken.models import Token
+
+from group.models import Group
+from asgiref.sync import sync_to_async
 
 
 class ChatRoomView(AsyncWebsocketConsumer):
+    group_id = None
+    group_name = None
+
+    @sync_to_async
+    def auth_and_check_input(self, group_id: int, token: str):
+        try:
+            token_name, token_key = token.split()
+            if token_name == 'Token':
+                token = Token.objects.get(key=token_key)
+                self.scope['user'] = token.user
+            else:
+                raise Exception("Invalid Token")
+        except Token.DoesNotExist:
+            raise Exception("Invalid Token")
+
+        if not isinstance(group_id, int):
+            raise Exception("id is not integer")
+
+        group = Group.objects.filter(pk=self.group_id).filter().first()
+        if group is None:
+            raise Exception("group does not exist")
+
+        if self.scope['user'] not in group.users.all():
+            raise Exception("you dont have the permission to this group")
+
     async def connect(self):
-        self.chat_box_name = self.scope["url_route"]["kwargs"]["chat_box_name"]
-        self.group_name = "chat_%s" % self.chat_box_name
+        try:
+            token = dict(self.scope['headers'])[b'authorization'].decode()
+            self.group_id = int(self.scope["url_route"]["kwargs"]["group_id"])
+        except Exception as e:
+            pass
+
+        self.group_name = "chat_%s" % self.group_id
+
+        await self.auth_and_check_input(self.group_id, token)
 
         await self.channel_layer.group_add(self.group_name, self.channel_name)
 
