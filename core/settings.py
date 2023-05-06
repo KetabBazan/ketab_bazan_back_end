@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'gift',
     'group',
     'channels',
+    'drf_yasg'
 ]
 
 # default settings

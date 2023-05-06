@@ -52,8 +52,11 @@ sqlparse==0.4.2
 Twisted==22.10.0
 txaio==23.1.1
 typing-extensions==4.5.0
+sqlparse==0.4.2
 tzdata==2021.5
 uritemplate==4.1.1
 urllib3==1.26.8
 whitenoise==6.0.0
 zope.interface==6.0
+django-filter==23.1
+
