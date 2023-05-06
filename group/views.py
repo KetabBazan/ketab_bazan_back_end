@@ -71,7 +71,7 @@ class GroupMembers(APIView):
         except:
             return Response(data={"message": "no group with this id"}, status=status.HTTP_400_BAD_REQUEST)
         if group.owner == self.request.user:
-            delete_user_id = self.request.data.get('new_user_id')
+            delete_user_id = self.request.data.get('delete_user_id')
             try:
                 new_user = User.objects.get(id=delete_user_id)
             except:
@@ -99,6 +99,13 @@ class UpdateGroupInfo(RetrieveUpdateAPIView):
 
     def get_queryset(self):
         return Group.objects.all()
+
+    def put(self, request, *args, **kwargs):
+        if self.get_object().owner.id == self.request.user.id:
+            response = super().put(request, *args, **kwargs)
+            return response
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN, data={"message": "only admin can update information"})
 
 
 class GroupPhoto(APIView):
