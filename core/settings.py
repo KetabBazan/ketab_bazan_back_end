@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import sys
 from pathlib import Path
 from .bootstrap import dotenv
 import os
@@ -135,16 +136,23 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'HOST': os.getenv('DATABASE_HOST', default='localhost'),
-        'NAME': os.getenv('DATABASE_NAME', default='projdb'),
-        'USER': os.getenv('DATABASE_USERNAME', default='username'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', default='password'),
-        'PORT': os.getenv('DATABASE_PORT', default='5432'),
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'HOST': os.getenv('DATABASE_HOST', default='localhost'),
+            'NAME': os.getenv('DATABASE_NAME', default='projdb'),
+            'USER': os.getenv('DATABASE_USERNAME', default='username'),
+            'PASSWORD': os.getenv('DATABASE_PASSWORD', default='password'),
+            'PORT': os.getenv('DATABASE_PORT', default='5432'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
