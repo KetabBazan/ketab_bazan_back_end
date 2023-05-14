@@ -33,10 +33,10 @@ jobs:
           python manage.py migrate
           python manage.py test
       - name: Deploy to server using SSH
-        uses: easingthemes/ssh-deploy@v2.1.5
+        uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-rltgoDzvO --delete"
+          ARGS: "-rlgoDzvc -i"
           SOURCE: "."
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_PORT: ${{ secrets.SSH_PORT }}
