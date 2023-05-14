@@ -11,7 +11,7 @@ on:
       - main
       - dev
 jobs:
-  build:
+  build and deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -30,9 +30,6 @@ jobs:
           python manage.py makemigrations
           python manage.py migrate
           python manage.py test
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
       - name: Deploy to server using SSH
         uses: easingthemes/ssh-deploy@main
         env:
