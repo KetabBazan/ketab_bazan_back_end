@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-import sys
 from pathlib import Path
 from .bootstrap import dotenv
 import os
@@ -136,10 +135,11 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-if 'test' in sys.argv:
+if 'TEST' == os.getenv('ENV_MODE', default='PRODUCTION'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'ketab_bazan',
         }
     }
 else:
@@ -206,11 +206,9 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_USE_TLS = bool(os.getenv('EMAIL_USE_TLS', default=True))
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', default=587))
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-
