@@ -14,3 +14,7 @@ data
 /media
 
 /venv
+
+/htmlcov
+
+.coverage

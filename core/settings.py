@@ -62,7 +62,8 @@ INSTALLED_APPS = [
     'gift',
     'group',
     'channels',
-    'drf_yasg'
+    'drf_yasg',
+    'django_nose',
 ]
 
 # default settings
@@ -191,6 +192,14 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
 }
+
+#TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+#
+# # Tell nose to measure coverage on the 'foo' and 'bar' apps
+# NOSE_ARGS = [
+#     '--with-coverage',
+#     '--cover-package=foo,bar',
+# ]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
