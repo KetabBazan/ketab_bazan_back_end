@@ -136,16 +136,24 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'HOST': os.getenv('DATABASE_HOST', default='localhost'),
-        'NAME': os.getenv('DATABASE_NAME', default='projdb'),
-        'USER': os.getenv('DATABASE_USERNAME', default='username'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', default='password'),
-        'PORT': os.getenv('DATABASE_PORT', default='5432'),
+if 'TEST' == os.getenv('ENV_MODE', default='PRODUCTION'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'ketab_bazan',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'HOST': os.getenv('DATABASE_HOST', default='localhost'),
+            'NAME': os.getenv('DATABASE_NAME', default='projdb'),
+            'USER': os.getenv('DATABASE_USERNAME', default='username'),
+            'PASSWORD': os.getenv('DATABASE_PASSWORD', default='password'),
+            'PORT': os.getenv('DATABASE_PORT', default='5432'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -207,11 +215,9 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_USE_TLS = bool(os.getenv('EMAIL_USE_TLS', default=True))
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', default=587))
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-

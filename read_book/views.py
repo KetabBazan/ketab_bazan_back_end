@@ -39,10 +39,10 @@ class BuyAPI(APIView):
             return Response("Payed Earlier", status=status.HTTP_304_NOT_MODIFIED)
 
         user.purchased_books.add(Book.objects.get(id=id))
-        print(user.balance)
+        #print(user.balance)
         user.balance -= Book.objects.get(id=id).price
         user.save()
-        print(user.balance)
+        #print(user.balance)
 
         return Response(data="Success", status=status.HTTP_200_OK)
 
@@ -55,7 +55,7 @@ class AllBooks(APIView):
         books.sort(key = lambda x : x.created, reverse=True)
         ans = []
         iteratingset = books
-        print("page:",page)
+       # print("page:",page)
         if page == "page_count":
             page_count = len(books) // 16
             if len(books) % 16 > 0:
