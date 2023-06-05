@@ -135,7 +135,7 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-if 'TEST' == os.getenv('ENV_MODE', default='PRODUCTION'):
+if 'TEST' == os.getenv('ENV_MODE', default='TEST'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
