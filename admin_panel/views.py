@@ -8,12 +8,12 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.views import APIView
 
 from admin_panel.permissions import IsSuperAdmin
-from admin_panel.serializers import CommentSerializer, ArticleSerializer, QuizSerializer, UserSerializer
+from admin_panel.serializers import CommentSerializer, ArticleSerializer, QuizSerializer, UserSerializer, QuestionSerializer
 from comments.models import Comment as CommentModel
 from write_article.models import Article as ArticleModel
 from accounts.models import User as UserModel
 from quiz.models import Quiz as QuizModel
-
+from quiz.models import Question as QuestionModel
 
 class Comment(APIView):
     permission_classes = (IsAdminUser,)
@@ -80,8 +80,8 @@ class Quiz(APIView):
             page = max(1, int(request.query_params['page']))
         except:
             page = 1
-        quizzes = QuizModel.objects.order_by('-id').all()[(page - 1) * per_page:page * per_page]
-        res = QuizSerializer(quizzes, many=True)
+        quizzes = QuestionModel.objects.order_by('-id').all()[(page - 1) * per_page:page * per_page]
+        res = QuestionSerializer(quizzes, many=True)
 
         return Response(res.data, status=status.HTTP_200_OK)
 
@@ -89,12 +89,12 @@ class Quiz(APIView):
 class VerifyQuiz(APIView):
     permission_classes = (IsAdminUser,)
 
-    def post(self, request, article_id):
-        quiz = QuizModel.objects.get(pk=article_id)
-        quiz.is_verified = not quiz.is_verified
+    def post(self, request, quastion_id):
+        quiz = QuestionModel.objects.get(pk=quastion_id)
+        quiz.is_verified = not quiz.is_verified  
         quiz.save()
 
-        res = QuizSerializer(quiz)
+        res = QuestionSerializer(quiz)
 
         return Response(res.data, status=status.HTTP_200_OK)
 

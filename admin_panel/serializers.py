@@ -23,7 +23,10 @@ class BookCommentSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('id', 'question', 'op1', 'op2', 'op3', 'op4', 'ans')
+        fields = ('id', 'question', 'op1', 'op2', 'op3', 'op4')
+    class Meta:
+        model = Question
+        fields = '__all__'
 
 
 class CommentSerializer(serializers.ModelSerializer):
