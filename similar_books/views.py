@@ -67,7 +67,7 @@ class SimilarBooks(APIView):
             res.append(book.id)
 
         thebookauthors = thebook.author.all()
-        print(thebookauthors)
+        #print(thebookauthors)
         for book in Book.objects.all():
             if book.id == thebook.id or book.id in res:
                 continue
